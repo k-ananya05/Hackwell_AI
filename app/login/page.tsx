@@ -9,6 +9,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Alert, AlertDescription } from "@/components/ui/alert"
+import { apiClient } from "@/lib/api"
 
 export default function LoginPage() {
   const [email, setEmail] = useState("")
@@ -22,14 +23,20 @@ export default function LoginPage() {
     setIsLoading(true)
     setError("")
 
-    // Simulate authentication
-    if (email === "doctor@hospital.com" && password === "password123") {
+    try {
+      // Use the API client for authentication
+      const response = await apiClient.login(email, password)
+      
+      // Store authentication data
       localStorage.setItem("isAuthenticated", "true")
+      localStorage.setItem("authToken", response.access_token)
       localStorage.setItem("userRole", "doctor")
-      localStorage.setItem("userName", "Dr. Sarah Johnson")
+      localStorage.setItem("userName", email.includes("demo_doctor") || email.includes("doctor@hackwell.ai") ? "Dr. Demo Doctor" : "Dr. Demo User")
+      
       router.push("/dashboard")
-    } else {
-      setError("Invalid email or password")
+    } catch (err: any) {
+      console.error("Login error:", err)
+      setError(err.message || "Invalid credentials. Please try again.")
     }
 
     setIsLoading(false)
@@ -45,11 +52,11 @@ export default function LoginPage() {
         <CardContent>
           <form onSubmit={handleSubmit} className="space-y-4">
             <div className="space-y-2">
-              <Label htmlFor="email">Email</Label>
+              <Label htmlFor="email">Email / Username</Label>
               <Input
                 id="email"
-                type="email"
-                placeholder="doctor@hospital.com"
+                type="text"
+                placeholder="demo_doctor or doctor@hackwell.ai"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
                 required
@@ -76,7 +83,11 @@ export default function LoginPage() {
             </Button>
           </form>
           <div className="mt-4 text-sm text-muted-foreground text-center">
-            Demo credentials: doctor@hospital.com / password123
+            <div className="font-semibold mb-2">Demo credentials (choose any):</div>
+            <div>• demo_doctor / demo123</div>
+            <div>• demo_user / demo123</div>
+            <div>• doctor@hackwell.ai / demo123</div>
+            <div>• demo@hackwell.ai / demo123</div>
           </div>
         </CardContent>
       </Card>

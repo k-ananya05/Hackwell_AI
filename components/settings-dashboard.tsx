@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Button } from "@/components/ui/button"
 import { Input } from "@/components/ui/input"
@@ -11,9 +11,26 @@ import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
 import { Separator } from "@/components/ui/separator"
 import { Badge } from "@/components/ui/badge"
 import { Alert, AlertDescription } from "@/components/ui/alert"
-import { User, Bell, Shield, Database, Palette, Globe, Save, AlertTriangle } from "lucide-react"
+import { User, Bell, Shield, Database, Palette, Globe, Save, AlertTriangle, Loader2 } from "lucide-react"
+import { apiClient } from "@/lib/api"
+import { useAuth } from "@/lib/auth"
 
 export function SettingsDashboard() {
+  const { user } = useAuth()
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+  const [saveStatus, setSaveStatus] = useState<{
+    profile: null | 'saving' | 'success' | 'error',
+    notifications: null | 'saving' | 'success' | 'error',
+    preferences: null | 'saving' | 'success' | 'error',
+    security: null | 'saving' | 'success' | 'error'
+  }>({
+    profile: null,
+    notifications: null,
+    preferences: null,
+    security: null
+  })
+  
   const [notifications, setNotifications] = useState({
     email: true,
     push: false,
@@ -23,8 +40,8 @@ export function SettingsDashboard() {
   })
 
   const [profile, setProfile] = useState({
-    name: "Dr. Sarah Johnson",
-    email: "sarah.johnson@hospital.com",
+    name: user?.full_name || "Dr. Sarah Johnson",
+    email: user?.email || "sarah.johnson@hospital.com",
     phone: "+1 (555) 123-4567",
     department: "Cardiology",
     license: "MD123456789",
@@ -45,24 +62,133 @@ export function SettingsDashboard() {
     loginAlerts: true,
   })
 
-  const handleSaveProfile = () => {
-    // In a real app, this would save to backend
-    console.log("Saving profile:", profile)
+  useEffect(() => {
+    const fetchSettings = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        // Get user settings from API
+        const userSettings = await apiClient.getUserSettings()
+        
+        // Update local state with fetched settings
+        if (userSettings) {
+          if (userSettings.notifications) {
+            setNotifications(userSettings.notifications)
+          }
+          
+          if (userSettings.preferences) {
+            setPreferences(userSettings.preferences)
+          }
+          
+          if (userSettings.security) {
+            setSecurity(userSettings.security)
+          }
+        }
+        
+        // Get user profile from API
+        const userProfile = await apiClient.getUserProfile()
+        
+        if (userProfile) {
+          setProfile({
+            name: userProfile.full_name || user?.full_name || "Dr. Sarah Johnson",
+            email: userProfile.email || user?.email || "sarah.johnson@hospital.com",
+            phone: userProfile.phone || "+1 (555) 123-4567",
+            department: userProfile.department || "Cardiology",
+            license: userProfile.license || "MD123456789",
+          })
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch settings')
+        console.error('Error fetching settings:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+    
+    fetchSettings()
+  }, [user])
+
+  const handleSaveProfile = async () => {
+    try {
+      setSaveStatus(prev => ({ ...prev, profile: 'saving' }))
+      await apiClient.updateUserProfile(profile)
+      setSaveStatus(prev => ({ ...prev, profile: 'success' }))
+      
+      // Reset status after 3 seconds
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, profile: null }))
+      }, 3000)
+    } catch (err) {
+      setSaveStatus(prev => ({ ...prev, profile: 'error' }))
+      setError(err instanceof Error ? err.message : 'Failed to update profile')
+      console.error('Error saving profile:', err)
+      
+      // Reset status after 3 seconds
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, profile: null }))
+      }, 3000)
+    }
   }
 
-  const handleSaveNotifications = () => {
-    // In a real app, this would save to backend
-    console.log("Saving notifications:", notifications)
+  const handleSaveNotifications = async () => {
+    try {
+      setSaveStatus(prev => ({ ...prev, notifications: 'saving' }))
+      await apiClient.updateUserSettings({ notifications })
+      setSaveStatus(prev => ({ ...prev, notifications: 'success' }))
+      
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, notifications: null }))
+      }, 3000)
+    } catch (err) {
+      setSaveStatus(prev => ({ ...prev, notifications: 'error' }))
+      setError(err instanceof Error ? err.message : 'Failed to update notifications')
+      console.error('Error saving notifications:', err)
+      
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, notifications: null }))
+      }, 3000)
+    }
   }
 
-  const handleSavePreferences = () => {
-    // In a real app, this would save to backend
-    console.log("Saving preferences:", preferences)
+  const handleSavePreferences = async () => {
+    try {
+      setSaveStatus(prev => ({ ...prev, preferences: 'saving' }))
+      await apiClient.updateUserSettings({ preferences })
+      setSaveStatus(prev => ({ ...prev, preferences: 'success' }))
+      
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, preferences: null }))
+      }, 3000)
+    } catch (err) {
+      setSaveStatus(prev => ({ ...prev, preferences: 'error' }))
+      setError(err instanceof Error ? err.message : 'Failed to update preferences')
+      console.error('Error saving preferences:', err)
+      
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, preferences: null }))
+      }, 3000)
+    }
   }
 
-  const handleSaveSecurity = () => {
-    // In a real app, this would save to backend
-    console.log("Saving security:", security)
+  const handleSaveSecurity = async () => {
+    try {
+      setSaveStatus(prev => ({ ...prev, security: 'saving' }))
+      await apiClient.updateUserSettings({ security })
+      setSaveStatus(prev => ({ ...prev, security: 'success' }))
+      
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, security: null }))
+      }, 3000)
+    } catch (err) {
+      setSaveStatus(prev => ({ ...prev, security: 'error' }))
+      setError(err instanceof Error ? err.message : 'Failed to update security settings')
+      console.error('Error saving security:', err)
+      
+      setTimeout(() => {
+        setSaveStatus(prev => ({ ...prev, security: null }))
+      }, 3000)
+    }
   }
 
   return (
@@ -73,7 +199,24 @@ export function SettingsDashboard() {
         <p className="text-muted-foreground mt-2">Manage your account preferences and system configuration</p>
       </div>
 
-      <Tabs defaultValue="profile" className="space-y-4">
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Loading settings...</span>
+        </div>
+      ) : error ? (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-4">
+              <p className="text-red-600 mb-4">Error loading settings: {error}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <Tabs defaultValue="profile" className="space-y-4">
         <TabsList className="grid w-full grid-cols-5">
           <TabsTrigger value="profile" className="flex items-center gap-2">
             <User className="h-4 w-4" />
@@ -159,10 +302,28 @@ export function SettingsDashboard() {
                 </div>
               </div>
               <Separator />
-              <div className="flex justify-end">
-                <Button onClick={handleSaveProfile}>
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
+              <div className="flex justify-between items-center">
+                {saveStatus.profile === 'success' && (
+                  <span className="text-sm text-green-600">Profile saved successfully!</span>
+                )}
+                {saveStatus.profile === 'error' && (
+                  <span className="text-sm text-red-600">Error saving profile</span>
+                )}
+                <Button 
+                  onClick={handleSaveProfile}
+                  disabled={saveStatus.profile === 'saving'}
+                >
+                  {saveStatus.profile === 'saving' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      Save Changes
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -230,10 +391,28 @@ export function SettingsDashboard() {
                 </div>
               </div>
               <Separator />
-              <div className="flex justify-end">
-                <Button onClick={handleSaveNotifications}>
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
+              <div className="flex justify-between items-center">
+                {saveStatus.notifications === 'success' && (
+                  <span className="text-sm text-green-600">Notification settings saved!</span>
+                )}
+                {saveStatus.notifications === 'error' && (
+                  <span className="text-sm text-red-600">Error saving notification settings</span>
+                )}
+                <Button 
+                  onClick={handleSaveNotifications}
+                  disabled={saveStatus.notifications === 'saving'}
+                >
+                  {saveStatus.notifications === 'saving' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      Save Changes
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -332,10 +511,28 @@ export function SettingsDashboard() {
                 </div>
               </div>
               <Separator />
-              <div className="flex justify-end">
-                <Button onClick={handleSavePreferences}>
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
+              <div className="flex justify-between items-center">
+                {saveStatus.preferences === 'success' && (
+                  <span className="text-sm text-green-600">Preferences saved!</span>
+                )}
+                {saveStatus.preferences === 'error' && (
+                  <span className="text-sm text-red-600">Error saving preferences</span>
+                )}
+                <Button 
+                  onClick={handleSavePreferences}
+                  disabled={saveStatus.preferences === 'saving'}
+                >
+                  {saveStatus.preferences === 'saving' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      Save Changes
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -425,11 +622,31 @@ export function SettingsDashboard() {
               </Alert>
 
               <Separator />
-              <div className="flex justify-between">
-                <Button variant="outline">Change Password</Button>
-                <Button onClick={handleSaveSecurity}>
-                  <Save className="mr-2 h-4 w-4" />
-                  Save Changes
+              <div className="flex justify-between items-center">
+                <div className="flex items-center gap-4">
+                  <Button variant="outline">Change Password</Button>
+                  {saveStatus.security === 'success' && (
+                    <span className="text-sm text-green-600">Security settings saved!</span>
+                  )}
+                  {saveStatus.security === 'error' && (
+                    <span className="text-sm text-red-600">Error saving security settings</span>
+                  )}
+                </div>
+                <Button 
+                  onClick={handleSaveSecurity}
+                  disabled={saveStatus.security === 'saving'}
+                >
+                  {saveStatus.security === 'saving' ? (
+                    <>
+                      <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                      Saving...
+                    </>
+                  ) : (
+                    <>
+                      <Save className="mr-2 h-4 w-4" />
+                      Save Changes
+                    </>
+                  )}
                 </Button>
               </div>
             </CardContent>
@@ -505,6 +722,7 @@ export function SettingsDashboard() {
           </Card>
         </TabsContent>
       </Tabs>
+      )}
     </div>
   )
 }

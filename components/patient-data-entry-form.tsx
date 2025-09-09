@@ -11,20 +11,32 @@ import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
 import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
-import { User, Activity, FlaskConical, Pill, Heart, Target } from "lucide-react"
+import { User, Activity, FlaskConical, Pill, Heart, Target, Loader2 } from "lucide-react"
+import { apiClient } from "@/lib/api"
 
 export function PatientDataEntryForm() {
+  const [loading, setLoading] = useState(false)
+  const [error, setError] = useState<string | null>(null)
+  const [success, setSuccess] = useState(false)
+  
   const [formData, setFormData] = useState({
-    // Demographics
-    patientId: "",
+    // Demographics - required by backend
+    patient_id: "",
+    name: "",
     age: "",
     gender: "",
+    date_of_birth: "",
+    phone: "",
+    email: "",
+    address: "",
+    emergency_contact: "",
+    medical_history: "",
     height: "",
     weight: "",
-    chronicConditions: [] as string[],
-    familyHistory: "",
+    chronic_conditions: [] as string[],
+    family_history: "",
 
-    // Vitals
+    // Additional form fields for vitals/labs (these would be separate API calls)
     systolicBP: "",
     diastolicBP: "",
     heartRate: "",
@@ -73,19 +85,107 @@ export function PatientDataEntryForm() {
     "Liver Disease",
   ]
 
-  const handleSubmit = (e: React.FormEvent) => {
+  const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
-    console.log("[v0] Patient data submitted:", formData)
-    // Here you would typically send the data to your ML pipeline
-    alert("Patient data submitted successfully for ML analysis!")
+    setLoading(true)
+    setError(null)
+    setSuccess(false)
+    
+    try {
+      // Validate required fields
+      if (!formData.patient_id || !formData.name || !formData.age || !formData.gender || !formData.date_of_birth) {
+        throw new Error("Please fill in all required fields (Patient ID, Name, Age, Gender, Date of Birth)")
+      }
+
+      // Prepare patient data for API
+      const patientData = {
+        patient_id: formData.patient_id,
+        name: formData.name,
+        age: parseInt(formData.age),
+        gender: formData.gender,
+        date_of_birth: formData.date_of_birth,
+        phone: formData.phone || undefined,
+        email: formData.email || undefined,
+        address: formData.address || undefined,
+        emergency_contact: formData.emergency_contact || undefined,
+        medical_history: formData.medical_history || undefined,
+        height: formData.height ? parseFloat(formData.height) : undefined,
+        weight: formData.weight ? parseFloat(formData.weight) : undefined,
+        chronic_conditions: formData.chronic_conditions,
+        family_history: formData.family_history || undefined
+      }
+
+      // Create patient via API
+      const newPatient = await apiClient.createPatient(patientData)
+      console.log("Patient created successfully:", newPatient)
+      
+      setSuccess(true)
+      
+      // Reset form after successful submission
+      setTimeout(() => {
+        setFormData({
+          patient_id: "",
+          name: "",
+          age: "",
+          gender: "",
+          date_of_birth: "",
+          phone: "",
+          email: "",
+          address: "",
+          emergency_contact: "",
+          medical_history: "",
+          height: "",
+          weight: "",
+          chronic_conditions: [],
+          family_history: "",
+          systolicBP: "",
+          diastolicBP: "",
+          heartRate: "",
+          bloodOxygen: "",
+          bodyTemp: "",
+          respiratoryRate: "",
+          weightChange: "",
+          fastingGlucose: "",
+          hba1c: "",
+          ldlCholesterol: "",
+          hdlCholesterol: "",
+          triglycerides: "",
+          creatinine: "",
+          egfr: "",
+          hemoglobin: "",
+          bnp: "",
+          currentMedications: "",
+          missedDoses: "",
+          sideEffects: "",
+          exerciseFrequency: "",
+          smokingStatus: "",
+          alcoholConsumption: "",
+          sleepQuality: "",
+          stressLevel: 5,
+          dietQuality: "",
+          alcoholUnits: "",
+          wellbeingScore: "",
+          environmentalFactors: "",
+          socialSupport: "",
+          functionalStatus: ""
+        })
+        setSuccess(false)
+      }, 3000)
+      
+    } catch (err) {
+      setError(err instanceof Error ? err.message : 'Failed to create patient')
+      console.error('Error creating patient:', err)
+    } finally {
+      setLoading(false)
+    }
   }
 
   const handleCheckboxChange = (condition: string, checked: boolean) => {
     setFormData((prev) => ({
       ...prev,
-      chronicConditions: checked
-        ? [...prev.chronicConditions, condition]
-        : prev.chronicConditions.filter((c) => c !== condition),
+      chronic_conditions: checked
+        ? [...prev.chronic_conditions, condition]
+        : prev.chronic_conditions.filter((c: string) => c !== condition),
     }))
   }
 
@@ -102,12 +202,83 @@ export function PatientDataEntryForm() {
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="patientId">Patient ID (Anonymized)</Label>
+            <Label htmlFor="patient_id">Patient ID (Anonymized)</Label>
             <Input
-              id="patientId"
-              value={formData.patientId}
-              onChange={(e) => setFormData((prev) => ({ ...prev, patientId: e.target.value }))}
+              id="patient_id"
+              value={formData.patient_id}
+              onChange={(e) => setFormData((prev) => ({ ...prev, patient_id: e.target.value }))}
               placeholder="e.g., PT-2024-001"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="name">Full Name</Label>
+            <Input
+              id="name"
+              value={formData.name}
+              onChange={(e) => setFormData((prev) => ({ ...prev, name: e.target.value }))}
+              placeholder="Patient full name"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="date_of_birth">Date of Birth</Label>
+            <Input
+              id="date_of_birth"
+              type="date"
+              value={formData.date_of_birth}
+              onChange={(e) => setFormData((prev) => ({ ...prev, date_of_birth: e.target.value }))}
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="phone">Phone Number</Label>
+            <Input
+              id="phone"
+              value={formData.phone}
+              onChange={(e) => setFormData((prev) => ({ ...prev, phone: e.target.value }))}
+              placeholder="+1 (555) 123-4567"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="email">Email Address</Label>
+            <Input
+              id="email"
+              type="email"
+              value={formData.email}
+              onChange={(e) => setFormData((prev) => ({ ...prev, email: e.target.value }))}
+              placeholder="patient@email.com"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="address">Address</Label>
+            <Input
+              id="address"
+              value={formData.address}
+              onChange={(e) => setFormData((prev) => ({ ...prev, address: e.target.value }))}
+              placeholder="Full address"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="emergency_contact">Emergency Contact</Label>
+            <Input
+              id="emergency_contact"
+              value={formData.emergency_contact}
+              onChange={(e) => setFormData((prev) => ({ ...prev, emergency_contact: e.target.value }))}
+              placeholder="Emergency contact info"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="medical_history">Medical History</Label>
+            <Textarea
+              id="medical_history"
+              value={formData.medical_history}
+              onChange={(e) => setFormData((prev) => ({ ...prev, medical_history: e.target.value }))}
+              placeholder="Past medical history..."
             />
           </div>
 
@@ -165,7 +336,7 @@ export function PatientDataEntryForm() {
                 <div key={condition} className="flex items-center space-x-2">
                   <Checkbox
                     id={condition}
-                    checked={formData.chronicConditions.includes(condition)}
+                    checked={formData.chronic_conditions.includes(condition)}
                     onCheckedChange={(checked) => handleCheckboxChange(condition, checked as boolean)}
                   />
                   <Label htmlFor={condition} className="text-sm">
@@ -177,11 +348,11 @@ export function PatientDataEntryForm() {
           </div>
 
           <div className="space-y-2 md:col-span-2 lg:col-span-3">
-            <Label htmlFor="familyHistory">Family History (Optional)</Label>
+            <Label htmlFor="family_history">Family History (Optional)</Label>
             <Textarea
-              id="familyHistory"
-              value={formData.familyHistory}
-              onChange={(e) => setFormData((prev) => ({ ...prev, familyHistory: e.target.value }))}
+              id="family_history"
+              value={formData.family_history}
+              onChange={(e) => setFormData((prev) => ({ ...prev, family_history: e.target.value }))}
               placeholder="Relevant family medical history..."
               rows={3}
             />
@@ -499,12 +670,40 @@ export function PatientDataEntryForm() {
         </CardContent>
       </Card>
 
+      {/* Status Messages */}
+      {error && (
+        <div className="bg-red-50 border border-red-200 rounded-md p-4">
+          <div className="flex items-center">
+            <div className="text-red-800">
+              <strong>Error:</strong> {error}
+            </div>
+          </div>
+        </div>
+      )}
+
+      {success && (
+        <div className="bg-green-50 border border-green-200 rounded-md p-4">
+          <div className="flex items-center">
+            <div className="text-green-800">
+              <strong>Success:</strong> Patient created successfully! The form will reset in a moment.
+            </div>
+          </div>
+        </div>
+      )}
+
       <div className="flex justify-end space-x-4">
-        <Button type="button" variant="outline">
+        <Button type="button" variant="outline" disabled={loading}>
           Save Draft
         </Button>
-        <Button type="submit" className="bg-primary hover:bg-primary/90">
-          Submit for ML Analysis
+        <Button type="submit" className="bg-primary hover:bg-primary/90" disabled={loading}>
+          {loading ? (
+            <>
+              <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+              Creating Patient...
+            </>
+          ) : (
+            "Create Patient"
+          )}
         </Button>
       </div>
     </form>

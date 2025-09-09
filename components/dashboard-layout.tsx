@@ -7,6 +7,7 @@ import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
 import { Users, BarChart3, Settings, LogOut, Menu, X, Activity, Brain, FileText } from "lucide-react"
+import { useAuth } from "@/lib/auth"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -16,11 +17,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const [sidebarOpen, setSidebarOpen] = useState(false)
   const router = useRouter()
   const pathname = usePathname()
+  const { user, logout } = useAuth()
 
   const handleLogout = () => {
-    localStorage.removeItem("isAuthenticated")
-    localStorage.removeItem("userRole")
-    localStorage.removeItem("userName")
+    logout()
     router.push("/login")
   }
 
@@ -32,13 +32,6 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
     { name: "AI Insights", href: "/explainability", icon: Brain },
     { name: "Settings", href: "/settings", icon: Settings },
   ]
-
-  const [userName, setUserName] = useState("Doctor")
-  
-  useEffect(() => {
-    // This code will only run on the client side
-    setUserName(localStorage.getItem("userName") || "Doctor")
-  }, [])
 
   return (
     <div className="min-h-screen bg-background flex overflow-hidden">
@@ -94,10 +87,10 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
           <div className="p-4 border-t border-sidebar-border">
             <div className="flex items-center mb-3">
               <div className="w-8 h-8 bg-sidebar-primary rounded-full flex items-center justify-center">
-                <span className="text-sm font-medium text-sidebar-primary-foreground">{userName.charAt(0)}</span>
+                <span className="text-sm font-medium text-sidebar-primary-foreground">{user?.full_name?.charAt(0) || 'D'}</span>
               </div>
               <div className="ml-3">
-                <p className="text-sm font-medium text-sidebar-foreground">{userName}</p>
+                <p className="text-sm font-medium text-sidebar-foreground">{user?.full_name || 'Doctor'}</p>
                 <p className="text-xs text-muted-foreground">Healthcare Professional</p>
               </div>
             </div>

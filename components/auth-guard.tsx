@@ -1,33 +1,17 @@
 "use client"
 
 import type React from "react"
-
-import { useEffect, useState } from "react"
-import { useRouter } from "next/navigation"
+import { useAuth } from "@/lib/auth"
+import { LoginForm } from "@/components/login-form"
 
 interface AuthGuardProps {
   children: React.ReactNode
 }
 
 export function AuthGuard({ children }: AuthGuardProps) {
-  const [isAuthenticated, setIsAuthenticated] = useState<boolean | null>(null)
-  const router = useRouter()
+  const { isAuthenticated, isLoading } = useAuth()
 
-  useEffect(() => {
-    const checkAuth = () => {
-      const authStatus = localStorage.getItem("isAuthenticated")
-      if (authStatus === "true") {
-        setIsAuthenticated(true)
-      } else {
-        setIsAuthenticated(false)
-        router.push("/login")
-      }
-    }
-
-    checkAuth()
-  }, [router])
-
-  if (isAuthenticated === null) {
+  if (isLoading) {
     return (
       <div className="min-h-screen flex items-center justify-center">
         <div className="text-lg">Loading...</div>
@@ -36,7 +20,7 @@ export function AuthGuard({ children }: AuthGuardProps) {
   }
 
   if (!isAuthenticated) {
-    return null
+    return <LoginForm />
   }
 
   return <>{children}</>

@@ -1,105 +1,62 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { Card, CardContent } from "@/components/ui/card"
 import { Input } from "@/components/ui/input"
 import { Button } from "@/components/ui/button"
 import { Badge } from "@/components/ui/badge"
-import { Search, Plus } from "lucide-react"
+import { Search, Plus, Loader2 } from "lucide-react"
+import { apiClient, type Patient } from "@/lib/api"
 
-interface Patient {
-  id: string
-  name: string
-  age: number
-  gender: string
-  condition: string
-  status: string
-  lastVisit: string
-  nextAppointment: string
-  riskLevel: "Low" | "Medium" | "High"
+// Helper function to determine risk level based on conditions
+function calculateRiskLevel(patient: Patient): "Low" | "Medium" | "High" {
+  const medicalHistory = patient.medical_history?.toLowerCase() || ""
+  
+  if (medicalHistory.includes("cardiac") || medicalHistory.includes("heart") || medicalHistory.includes("critical")) {
+    return "High"
+  } else if (medicalHistory.includes("diabetes") || medicalHistory.includes("hypertension") || medicalHistory.includes("monitoring")) {
+    return "Medium"
+  }
+  return "Low"
 }
 
 export function PatientList() {
   const [searchTerm, setSearchTerm] = useState("")
   const [filterStatus, setFilterStatus] = useState("all")
+  const [patients, setPatients] = useState<Patient[]>([])
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
 
-  const patients: Patient[] = [
-    {
-      id: "P001",
-      name: "John Smith",
-      age: 45,
-      gender: "Male",
-      condition: "Hypertension",
-      status: "Stable",
-      lastVisit: "2024-01-15",
-      nextAppointment: "2024-02-15",
-      riskLevel: "Low",
-    },
-    {
-      id: "P002",
-      name: "Sarah Johnson",
-      age: 32,
-      gender: "Female",
-      condition: "Type 2 Diabetes",
-      status: "Monitoring",
-      lastVisit: "2024-01-14",
-      nextAppointment: "2024-01-28",
-      riskLevel: "Medium",
-    },
-    {
-      id: "P003",
-      name: "Michael Brown",
-      age: 67,
-      gender: "Male",
-      condition: "Cardiac Arrhythmia",
-      status: "Critical",
-      lastVisit: "2024-01-15",
-      nextAppointment: "2024-01-18",
-      riskLevel: "High",
-    },
-    {
-      id: "P004",
-      name: "Emily Davis",
-      age: 28,
-      gender: "Female",
-      condition: "Asthma",
-      status: "Improving",
-      lastVisit: "2024-01-13",
-      nextAppointment: "2024-02-10",
-      riskLevel: "Low",
-    },
-    {
-      id: "P005",
-      name: "Robert Wilson",
-      age: 55,
-      gender: "Male",
-      condition: "Chronic Kidney Disease",
-      status: "Monitoring",
-      lastVisit: "2024-01-12",
-      nextAppointment: "2024-01-26",
-      riskLevel: "Medium",
-    },
-    {
-      id: "P006",
-      name: "Lisa Anderson",
-      age: 41,
-      gender: "Female",
-      condition: "Migraine",
-      status: "Stable",
-      lastVisit: "2024-01-10",
-      nextAppointment: "2024-03-10",
-      riskLevel: "Low",
-    },
-  ]
+  useEffect(() => {
+    const fetchPatients = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        const data = await apiClient.getPatients()
+        setPatients(data)
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch patients')
+        console.error('Error fetching patients:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchPatients()
+  }, [])
 
   const filteredPatients = patients.filter((patient) => {
     const matchesSearch =
-      patient.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      patient.id.toLowerCase().includes(searchTerm.toLowerCase()) ||
-      patient.condition.toLowerCase().includes(searchTerm.toLowerCase())
+      patient.name?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.patient_id?.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      patient.medical_history?.toLowerCase().includes(searchTerm.toLowerCase())
 
-    const matchesFilter = filterStatus === "all" || patient.status.toLowerCase() === filterStatus.toLowerCase()
+    // For status filtering, we'll use a simple mapping based on medical history
+    const patientStatus = patient.medical_history?.toLowerCase().includes("critical") ? "critical" :
+                         patient.medical_history?.toLowerCase().includes("monitoring") ? "monitoring" : "stable"
+    
+    const matchesFilter = filterStatus === "all" || patientStatus === filterStatus.toLowerCase()
 
     return matchesSearch && matchesFilter
   })
@@ -194,53 +151,77 @@ export function PatientList() {
       </Card>
 
       {/* Patient list */}
-      <div className="grid gap-4">
-        {filteredPatients.map((patient) => (
-          <Card key={patient.id} className="hover:shadow-md transition-shadow">
-            <CardContent className="pt-6">
-              <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
-                <div className="flex items-center space-x-4">
-                  <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
-                    <span className="text-lg font-medium text-primary">
-                      {patient.name
-                        .split(" ")
-                        .map((n) => n[0])
-                        .join("")}
-                    </span>
-                  </div>
-                  <div>
-                    <h3 className="font-semibold text-foreground">{patient.name}</h3>
-                    <p className="text-sm text-muted-foreground">
-                      {patient.id} • {patient.age} years • {patient.gender}
-                    </p>
-                    <p className="text-sm text-muted-foreground">{patient.condition}</p>
-                  </div>
-                </div>
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Loading patients...</span>
+        </div>
+      ) : error ? (
+        <Card>
+          <CardContent className="pt-6">
+            <div className="text-center py-8">
+              <p className="text-red-600 mb-4">Error loading patients: {error}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
+          </CardContent>
+        </Card>
+      ) : (
+        <div className="grid gap-4">
+          {filteredPatients.map((patient) => {
+            const riskLevel = calculateRiskLevel(patient)
+            const status = patient.medical_history?.toLowerCase().includes("critical") ? "critical" :
+                          patient.medical_history?.toLowerCase().includes("monitoring") ? "monitoring" : "stable"
+            
+            return (
+              <Card key={patient.id} className="hover:shadow-md transition-shadow">
+                <CardContent className="pt-6">
+                  <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-4">
+                    <div className="flex items-center space-x-4">
+                      <div className="w-12 h-12 bg-primary/10 rounded-full flex items-center justify-center">
+                        <span className="text-lg font-medium text-primary">
+                          {patient.name
+                            ?.split(" ")
+                            .map((n) => n[0])
+                            .join("") || "?"}
+                        </span>
+                      </div>
+                      <div>
+                        <h3 className="font-semibold text-foreground">{patient.name || 'Unknown'}</h3>
+                        <p className="text-sm text-muted-foreground">
+                          {patient.patient_id || 'N/A'} • {patient.age || 'N/A'} years • {patient.gender || 'N/A'}
+                        </p>
+                        <p className="text-sm text-muted-foreground">{patient.email || 'No email'}</p>
+                      </div>
+                    </div>
 
-                <div className="flex flex-col sm:flex-row sm:items-center gap-4">
-                  <div className="flex flex-wrap gap-2">
-                    <Badge className={getStatusColor(patient.status)}>{patient.status}</Badge>
-                    <Badge className={getRiskColor(patient.riskLevel)}>Risk: {patient.riskLevel}</Badge>
+                    <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                      <div className="flex flex-wrap gap-2">
+                        <Badge className={getStatusColor(status)}>{status}</Badge>
+                        <Badge className={getRiskColor(riskLevel)}>Risk: {riskLevel}</Badge>
+                      </div>
+
+                      <div className="text-sm text-muted-foreground text-right">
+                        <p>Created: {patient.created_at ? new Date(patient.created_at).toLocaleDateString() : 'Unknown'}</p>
+                        <p>Updated: {patient.updated_at ? new Date(patient.updated_at).toLocaleDateString() : 'Never'}</p>
+                      </div>
+
+                      <Link href={`/patients/${patient.patient_id}`}>
+                        <Button variant="outline" size="sm">
+                          View Details
+                        </Button>
+                      </Link>
+                    </div>
                   </div>
+                </CardContent>
+              </Card>
+            )
+          })}
+        </div>
+      )}
 
-                  <div className="text-sm text-muted-foreground text-right">
-                    <p>Last visit: {patient.lastVisit}</p>
-                    <p>Next: {patient.nextAppointment}</p>
-                  </div>
-
-                  <Link href={`/patients/${patient.id}`}>
-                    <Button variant="outline" size="sm">
-                      View Details
-                    </Button>
-                  </Link>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
-        ))}
-      </div>
-
-      {filteredPatients.length === 0 && (
+      {!loading && !error && filteredPatients.length === 0 && (
         <Card>
           <CardContent className="pt-6 text-center">
             <p className="text-muted-foreground">No patients found matching your search criteria.</p>

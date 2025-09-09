@@ -1,14 +1,57 @@
 "use client"
 
+import { useState, useEffect } from "react"
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card"
 import { Badge } from "@/components/ui/badge"
 import { Button } from "@/components/ui/button"
 import { Progress } from "@/components/ui/progress"
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs"
-import { Brain, AlertTriangle, CheckCircle, Info, TrendingUp, Users } from "lucide-react"
+import { Brain, AlertTriangle, CheckCircle, Info, TrendingUp, Users, Loader2 } from "lucide-react"
+import { apiClient } from "@/lib/api"
 
 export function ExplainabilityDashboard() {
-  const aiInsights = [
+  const [aiInsights, setAIInsights] = useState<any[]>([])
+  const [modelPerformance, setModelPerformance] = useState<any[]>([])
+  const [metrics, setMetrics] = useState<any>(null)
+  const [loading, setLoading] = useState(true)
+  const [error, setError] = useState<string | null>(null)
+
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        setLoading(true)
+        setError(null)
+        
+        const [insightsData, performanceData, metricsData] = await Promise.allSettled([
+          apiClient.getAIInsights(),
+          apiClient.getModelPerformance(),
+          apiClient.getAIMetrics()
+        ])
+        
+        if (insightsData.status === 'fulfilled') {
+          setAIInsights(insightsData.value)
+        }
+        
+        if (performanceData.status === 'fulfilled') {
+          setModelPerformance(performanceData.value)
+        }
+        
+        if (metricsData.status === 'fulfilled') {
+          setMetrics(metricsData.value)
+        }
+      } catch (err) {
+        setError(err instanceof Error ? err.message : 'Failed to fetch AI data')
+        console.error('Error fetching AI data:', err)
+      } finally {
+        setLoading(false)
+      }
+    }
+
+    fetchData()
+  }, [])
+
+  // Fallback data for when API is not available
+  const fallbackAiInsights = [
     {
       id: 1,
       type: "Risk Prediction",
@@ -41,12 +84,16 @@ export function ExplainabilityDashboard() {
     },
   ]
 
-  const modelPerformance = [
+  const fallbackModelPerformance = [
     { model: "Risk Prediction Model", accuracy: 94.2, lastUpdated: "2024-01-15" },
     { model: "Treatment Response Model", accuracy: 89.7, lastUpdated: "2024-01-14" },
     { model: "Readmission Prediction", accuracy: 91.5, lastUpdated: "2024-01-13" },
     { model: "Drug Interaction Checker", accuracy: 97.8, lastUpdated: "2024-01-15" },
   ]
+  
+  // Use real data if available, otherwise fallback to demo data
+  const displayInsights = aiInsights.length > 0 ? aiInsights : fallbackAiInsights
+  const displayPerformance = modelPerformance.length > 0 ? modelPerformance : fallbackModelPerformance
 
   const getStatusColor = (status: string) => {
     switch (status.toLowerCase()) {
@@ -88,47 +135,77 @@ export function ExplainabilityDashboard() {
         </Button>
       </div>
 
-      {/* AI Performance Overview */}
-      <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+      {loading ? (
+        <div className="flex items-center justify-center py-8">
+          <Loader2 className="h-8 w-8 animate-spin" />
+          <span className="ml-2">Loading AI insights...</span>
+        </div>
+      ) : error ? (
         <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Active Predictions</CardTitle>
-            <Brain className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-card-foreground">247</div>
-            <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+15%</span> from last week
-            </p>
+          <CardContent className="pt-6">
+            <div className="text-center py-4">
+              <p className="text-red-600 mb-4">Error loading AI insights: {error}</p>
+              <Button onClick={() => window.location.reload()}>
+                Try Again
+              </Button>
+            </div>
           </CardContent>
         </Card>
+      ) : (
+        /* AI Performance Overview */
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Active Predictions</CardTitle>
+              <Brain className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-card-foreground">
+                {metrics?.active_predictions || "247"}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                <span className={metrics?.prediction_change_percentage && parseFloat(metrics.prediction_change_percentage) > 0 ? "text-green-600" : "text-red-600"}>
+                  {metrics?.prediction_change_percentage || "+15%"}
+                </span> from last week
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Model Accuracy</CardTitle>
-            <TrendingUp className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-card-foreground">93.1%</div>
-            <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">+0.8%</span> from last month
-            </p>
-          </CardContent>
-        </Card>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Model Accuracy</CardTitle>
+              <TrendingUp className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-card-foreground">
+                {metrics?.model_accuracy ? `${metrics.model_accuracy.toFixed(1)}%` : "93.1%"}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                <span className={metrics?.accuracy_change_percentage && parseFloat(metrics.accuracy_change_percentage) > 0 ? "text-green-600" : "text-red-600"}>
+                  {metrics?.accuracy_change_percentage || "+0.8%"}
+                </span> from last month
+              </p>
+            </CardContent>
+          </Card>
 
-        <Card>
-          <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium text-muted-foreground">Patients Analyzed</CardTitle>
-            <Users className="h-4 w-4 text-muted-foreground" />
-          </CardHeader>
-          <CardContent>
-            <div className="text-2xl font-bold text-card-foreground">1,247</div>
-            <p className="text-xs text-muted-foreground">
-              <span className="text-green-600">100%</span> coverage
-            </p>
-          </CardContent>
-        </Card>
-      </div>
+          <Card>
+            <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+              <CardTitle className="text-sm font-medium text-muted-foreground">Patients Analyzed</CardTitle>
+              <Users className="h-4 w-4 text-muted-foreground" />
+            </CardHeader>
+            <CardContent>
+              <div className="text-2xl font-bold text-card-foreground">
+                {metrics?.patients_analyzed?.toLocaleString() || "1,247"}
+              </div>
+              <p className="text-xs text-muted-foreground">
+                <span className="text-green-600">
+                  {metrics?.coverage_percentage || "100%"}
+                </span> coverage
+              </p>
+            </CardContent>
+          </Card>
+        </div>
+      )}
 
       <Tabs defaultValue="insights" className="space-y-4">
         <TabsList>
@@ -165,7 +242,7 @@ export function ExplainabilityDashboard() {
                   <div>
                     <h4 className="font-medium mb-2">Key Factors</h4>
                     <div className="flex flex-wrap gap-2">
-                      {insight.factors.map((factor, index) => (
+                      {insight.factors?.map((factor: string, index: number) => (
                         <Badge key={index} variant="secondary">
                           {factor}
                         </Badge>

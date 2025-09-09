@@ -1,0 +1,455 @@
+
+> my-v0-project@0.1.0 dev
+> next dev
+
+  ▲ Next.js 14.2.16
+  - Local:        http://localhost:3000
+  - Environments: .env.local
+
+ ✓ Starting...
+ ✓ Ready in 1432ms
+ ○ Compiling / ...
+ ✓ Compiled / in 1642ms (541 modules)
+ GET / 200 in 1806ms
+ GET / 200 in 22ms
+ GET / 200 in 35ms
+ ✓ Compiled /login in 482ms (541 modules)
+ ✓ Compiled /dashboard in 394ms (644 modules)
+ GET /dashboard 200 in 84ms
+ ✓ Compiled /patients in 201ms (657 modules)
+ ○ Compiling /data-entry ...
+ ✓ Compiled /data-entry in 1262ms (826 modules)
+ ○ Compiling /analytics ...
+ ✓ Compiled /analytics in 1805ms (2139 modules)
+ ✓ Compiled /explainability in 378ms (2160 modules)
+ ✓ Compiled /settings in 257ms (2189 modules)
+ GET /dashboard 200 in 128ms
+ GET / 200 in 71ms
+ GET / 200 in 36ms
+ GET / 200 in 79ms
+ GET /login 200 in 92ms
+ ✓ Compiled in 1077ms (2149 modules)
+ ✓ Compiled in 332ms (2149 modules)
+ ✓ Compiled in 392ms (2149 modules)
+ ✓ Compiled / in 142ms (1091 modules)
+ HEAD / 200 in 287ms
+ ✓ Compiled in 547ms (2153 modules)
+ ✓ Compiled in 341ms (2153 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /login 200 in 126ms
+ GET /login 200 in 115ms
+ ✓ Compiled /settings in 404ms (1110 modules)
+ ✓ Compiled /explainability in 108ms (1119 modules)
+ ✓ Compiled /patients in 137ms (1127 modules)
+ GET /patients 200 in 75ms
+ ✓ Compiled in 1130ms (2168 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /login 200 in 243ms
+ GET /dashboard 200 in 243ms
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat '/Users/sathishkesavan/Hackwell_AI/.next/server/app/explainability/page.js'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/explainability/page' in /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server for build dependencies doesn't lead to expected result '/Users/sathishkesavan/Hackwell_AI/.next/server/app/explainability/page.js', but to 'Error: Can't resolve '../../../../.next/server/app/explainability/page' in '/Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/explainability/page (expected /Users/sathishkesavan/Hackwell_AI/.next/server/app/explainability/page.js)
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at resolve commonjs /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/patients/page' in /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server for build dependencies doesn't lead to expected result '/Users/sathishkesavan/Hackwell_AI/.next/server/app/patients/page.js', but to 'Error: Can't resolve '../../../../.next/server/app/patients/page' in '/Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/patients/page (expected /Users/sathishkesavan/Hackwell_AI/.next/server/app/patients/page.js)
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at resolve commonjs /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w> [webpack.cache.PackFileCacheStrategy] Caching failed for pack: Error: ENOENT: no such file or directory, lstat '/Users/sathishkesavan/Hackwell_AI/.next/server/app/explainability/page.js'
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/explainability/page' in /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server for build dependencies doesn't lead to expected result '/Users/sathishkesavan/Hackwell_AI/.next/server/app/explainability/page.js', but to 'Error: Can't resolve '../../../../.next/server/app/explainability/page' in '/Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/explainability/page (expected /Users/sathishkesavan/Hackwell_AI/.next/server/app/explainability/page.js)
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at resolve commonjs /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w> [webpack.cache.PackFileCacheStrategy/webpack.FileSystemInfo] Resolving '../../../../.next/server/app/patients/page' in /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server for build dependencies doesn't lead to expected result '/Users/sathishkesavan/Hackwell_AI/.next/server/app/patients/page.js', but to 'Error: Can't resolve '../../../../.next/server/app/patients/page' in '/Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server'' instead. Resolving dependencies are ignored for this path.
+<w>  at resolve commonjs file ../../../../.next/server/app/patients/page (expected /Users/sathishkesavan/Hackwell_AI/.next/server/app/patients/page.js)
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/require.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/server/load-components.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/utils.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-app-loader.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/loader-runner/LoaderRunner.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/bundle5.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/compiled/webpack/webpack.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/plugins/define-env-plugin.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/swc/index.js
+<w>  at file dependencies /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at file /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+<w>  at resolve commonjs /Users/sathishkesavan/Hackwell_AI/node_modules/next/dist/build/webpack/loaders/next-barrel-loader.js
+ ✓ Compiled in 758ms (2172 modules)
+ ✓ Compiled in 417ms (2172 modules)
+ ✓ Compiled in 392ms (2172 modules)
+ ✓ Compiled in 309ms (2172 modules)
+ ✓ Compiled in 380ms (1064 modules)
+ ✓ Compiled in 401ms (1064 modules)
+ ✓ Compiled in 427ms (2172 modules)
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ ⚠ Fast Refresh had to perform a full reload. Read more: https://nextjs.org/docs/messages/fast-refresh-reload
+ GET /login 200 in 130ms
+ GET /dashboard 200 in 131ms
+ ✓ Compiled /_not-found in 495ms (2175 modules)
+ GET /_next/static/css/app/layout.css?v=1757435006783 404 in 566ms
+ GET /_next/static/css/app/layout.css?v=1757435006720 404 in 573ms
+ GET /_next/static/chunks/main-app.js?v=1757435006783 404 in 571ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 571ms
+ GET /_next/static/chunks/main-app.js?v=1757435006720 404 in 540ms
+ GET /_next/static/chunks/app-pages-internals.js 404 in 45ms
+ ⨯ ./components/analytics-dashboard.tsx
+Error: 
+  [31mx[0m the name `conditionDistribution` is defined multiple times
+     ,-[[36;1;4m/Users/sathishkesavan/Hackwell_AI/components/analytics-dashboard.tsx[0m:87:1]
+ [2m 87[0m | export function AnalyticsDashboard() {
+ [2m 88[0m |   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+ [2m 89[0m |   const [patientVolume, setPatientVolume] = useState<PatientVolumeData[]>([])
+ [2m 90[0m |   const [conditionDistribution, setConditionDistribution] = useState<ConditionDistribution[]>([])
+     : [31;1m         ^^^^^^^^^^|^^^^^^^^^^[0m
+     :                    [31;1m`-- [31;1mprevious definition of `conditionDistribution` here[0m[0m
+ [2m 91[0m |   const [riskDistribution, setRiskDistribution] = useState<RiskDistribution[]>([])
+ [2m 92[0m |   const [modelPerformance, setModelPerformance] = useState<ModelPerformance[]>([])
+ [2m 93[0m |   const [loading, setLoading] = useState(true)
+ [2m 94[0m |   const [error, setError] = useState<string | null>(null)
+ [2m 95[0m |   const [selectedTimeRange, setSelectedTimeRange] = useState("6")
+ [2m 96[0m | 
+ [2m 97[0m |   useEffect(() => {
+ [2m 98[0m |     const fetchAnalyticsData = async () => {
+ [2m 99[0m |       try {
+ [2m100[0m |         setLoading(true)
+ [2m101[0m |         setError(null)
+ [2m102[0m |         
+ [2m103[0m |         const [
+ [2m104[0m |           analyticsData,
+ [2m105[0m |           volumeData,
+ [2m106[0m |           conditionData,
+ [2m107[0m |           riskData,
+ [2m108[0m |           performanceData
+ [2m109[0m |         ] = await Promise.allSettled([
+ [2m110[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/overview`, {
+ [2m111[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m112[0m |           }).then(res => res.json()),
+ [2m113[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/patient-volume?months=${selectedTimeRange}`, {
+ [2m114[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m115[0m |           }).then(res => res.json()),
+ [2m116[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/condition-distribution`, {
+ [2m117[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m118[0m |           }).then(res => res.json()),
+ [2m119[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/risk-distribution`, {
+ [2m120[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m121[0m |           }).then(res => res.json()),
+ [2m122[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/model-performance`, {
+ [2m123[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m124[0m |           }).then(res => res.json())
+ [2m125[0m |         ])
+ [2m126[0m |         
+ [2m127[0m |         // Handle settled promises
+ [2m128[0m |         setAnalytics(analyticsData.status === 'fulfilled' ? analyticsData.value : null)
+ [2m129[0m |         setPatientVolume(volumeData.status === 'fulfilled' ? volumeData.value : [])
+ [2m130[0m |         setConditionDistribution(conditionData.status === 'fulfilled' ? conditionData.value : [])
+ [2m131[0m |         setRiskDistribution(riskData.status === 'fulfilled' ? riskData.value : [])
+ [2m132[0m |         setModelPerformance(performanceData.status === 'fulfilled' ? performanceData.value : [])
+ [2m133[0m |         
+ [2m134[0m |       } catch (err) {
+ [2m135[0m |         setError(err instanceof Error ? err.message : 'Failed to fetch analytics data')
+ [2m136[0m |         console.error('Error fetching analytics data:', err)
+ [2m137[0m |       } finally {
+ [2m138[0m |         setLoading(false)
+ [2m139[0m |       }
+ [2m140[0m |     }
+ [2m141[0m | 
+ [2m142[0m |     fetchAnalyticsData()
+ [2m143[0m |   }, [selectedTimeRange])
+ [2m144[0m | 
+ [2m145[0m |   // Fallback data for when API is not available
+ [2m146[0m |   const fallbackPatientVolume = [
+ [2m147[0m |     { month: "Jan", patients: 120, new_patients: 15 },
+ [2m148[0m |     { month: "Feb", patients: 135, new_patients: 22 },
+ [2m149[0m |     { month: "Mar", patients: 142, new_patients: 18 },
+ [2m150[0m |     { month: "Apr", patients: 158, new_patients: 25 },
+ [2m151[0m |     { month: "May", patients: 165, new_patients: 20 },
+ [2m152[0m |     { month: "Jun", patients: 178, new_patients: 28 },
+ [2m153[0m |   ]
+ [2m154[0m | 
+ [2m155[0m |   const fallbackConditionDistribution = [
+ [2m156[0m |     { name: "Diabetes", value: 45, percentage: 35.2 },
+ [2m157[0m |     { name: "Hypertension", value: 38, percentage: 29.7 },
+ [2m158[0m |     { name: "Heart Disease", value: 25, percentage: 19.5 },
+ [2m159[0m |     { name: "COPD", value: 12, percentage: 9.4 },
+ [2m160[0m |     { name: "Other", value: 8, percentage: 6.2 },
+ [2m161[0m |   ]
+ [2m162[0m | 
+ [2m163[0m |   const fallbackRiskDistribution = [
+ [2m164[0m |     { risk: "Low", count: 89, percentage: 62.2 },
+ [2m165[0m |     { risk: "Medium", count: 34, percentage: 23.8 },
+ [2m166[0m |     { risk: "High", count: 20, percentage: 14.0 },
+ [2m167[0m |   ]
+ [2m168[0m | 
+ [2m169[0m |   // Use real data if available, otherwise fallback
+ [2m170[0m |   const displayPatientVolume = patientVolume.length > 0 ? patientVolume : fallbackPatientVolume
+ [2m171[0m |   const displayConditionDistribution = conditionDistribution.length > 0 ? conditionDistribution : fallbackConditionDistribution
+ [2m172[0m |   const displayRiskDistribution = riskDistribution.length > 0 ? riskDistribution : fallbackRiskDistribution
+ [2m173[0m | 
+ [2m174[0m |   const conditionDistribution = [
+     : [33;1m        ^^^^^^^^^^|^^^^^^^^^^[0m
+     :                   [33;1m`-- [33;1m`conditionDistribution` redefined here[0m[0m
+ [2m175[0m |     { name: "Hypertension", value: 35, color: "#164e63" },
+ [2m176[0m |     { name: "Diabetes", value: 25, color: "#8b5cf6" },
+ [2m177[0m |     { name: "Cardiac", value: 20, color: "#ec4899" },
+     `----
+
+  [31mx[0m the name `riskDistribution` is defined multiple times
+     ,-[[36;1;4m/Users/sathishkesavan/Hackwell_AI/components/analytics-dashboard.tsx[0m:88:1]
+ [2m 88[0m |   const [analytics, setAnalytics] = useState<AnalyticsData | null>(null)
+ [2m 89[0m |   const [patientVolume, setPatientVolume] = useState<PatientVolumeData[]>([])
+ [2m 90[0m |   const [conditionDistribution, setConditionDistribution] = useState<ConditionDistribution[]>([])
+ [2m 91[0m |   const [riskDistribution, setRiskDistribution] = useState<RiskDistribution[]>([])
+     : [31;1m         ^^^^^^^^|^^^^^^^[0m
+     :                  [31;1m`-- [31;1mprevious definition of `riskDistribution` here[0m[0m
+ [2m 92[0m |   const [modelPerformance, setModelPerformance] = useState<ModelPerformance[]>([])
+ [2m 93[0m |   const [loading, setLoading] = useState(true)
+ [2m 94[0m |   const [error, setError] = useState<string | null>(null)
+ [2m 95[0m |   const [selectedTimeRange, setSelectedTimeRange] = useState("6")
+ [2m 96[0m | 
+ [2m 97[0m |   useEffect(() => {
+ [2m 98[0m |     const fetchAnalyticsData = async () => {
+ [2m 99[0m |       try {
+ [2m100[0m |         setLoading(true)
+ [2m101[0m |         setError(null)
+ [2m102[0m |         
+ [2m103[0m |         const [
+ [2m104[0m |           analyticsData,
+ [2m105[0m |           volumeData,
+ [2m106[0m |           conditionData,
+ [2m107[0m |           riskData,
+ [2m108[0m |           performanceData
+ [2m109[0m |         ] = await Promise.allSettled([
+ [2m110[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/overview`, {
+ [2m111[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m112[0m |           }).then(res => res.json()),
+ [2m113[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/patient-volume?months=${selectedTimeRange}`, {
+ [2m114[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m115[0m |           }).then(res => res.json()),
+ [2m116[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/condition-distribution`, {
+ [2m117[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m118[0m |           }).then(res => res.json()),
+ [2m119[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/risk-distribution`, {
+ [2m120[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m121[0m |           }).then(res => res.json()),
+ [2m122[0m |           fetch(`${process.env.NEXT_PUBLIC_API_URL || 'http://localhost:8000'}/api/analytics/model-performance`, {
+ [2m123[0m |             headers: { Authorization: `Bearer ${localStorage.getItem('hackwell_auth_token')}` }
+ [2m124[0m |           }).then(res => res.json())
+ [2m125[0m |         ])
+ [2m126[0m |         
+ [2m127[0m |         // Handle settled promises
+ [2m128[0m |         setAnalytics(analyticsData.status === 'fulfilled' ? analyticsData.value : null)
+ [2m129[0m |         setPatientVolume(volumeData.status === 'fulfilled' ? volumeData.value : [])
+ [2m130[0m |         setConditionDistribution(conditionData.status === 'fulfilled' ? conditionData.value : [])
+ [2m131[0m |         setRiskDistribution(riskData.status === 'fulfilled' ? riskData.value : [])
+ [2m132[0m |         setModelPerformance(performanceData.status === 'fulfilled' ? performanceData.value : [])
+ [2m133[0m |         
+ [2m134[0m |       } catch (err) {
+ [2m135[0m |         setError(err instanceof Error ? err.message : 'Failed to fetch analytics data')
+ [2m136[0m |         console.error('Error fetching analytics data:', err)
+ [2m137[0m |       } finally {
+ [2m138[0m |         setLoading(false)
+ [2m139[0m |       }
+ [2m140[0m |     }
+ [2m141[0m | 
+ [2m142[0m |     fetchAnalyticsData()
+ [2m143[0m |   }, [selectedTimeRange])
+ [2m144[0m | 
+ [2m145[0m |   // Fallback data for when API is not available
+ [2m146[0m |   const fallbackPatientVolume = [
+ [2m147[0m |     { month: "Jan", patients: 120, new_patients: 15 },
+ [2m148[0m |     { month: "Feb", patients: 135, new_patients: 22 },
+ [2m149[0m |     { month: "Mar", patients: 142, new_patients: 18 },
+ [2m150[0m |     { month: "Apr", patients: 158, new_patients: 25 },
+ [2m151[0m |     { month: "May", patients: 165, new_patients: 20 },
+ [2m152[0m |     { month: "Jun", patients: 178, new_patients: 28 },
+ [2m153[0m |   ]
+ [2m154[0m | 
+ [2m155[0m |   const fallbackConditionDistribution = [
+ [2m156[0m |     { name: "Diabetes", value: 45, percentage: 35.2 },
+ [2m157[0m |     { name: "Hypertension", value: 38, percentage: 29.7 },
+ [2m158[0m |     { name: "Heart Disease", value: 25, percentage: 19.5 },
+ [2m159[0m |     { name: "COPD", value: 12, percentage: 9.4 },
+ [2m160[0m |     { name: "Other", value: 8, percentage: 6.2 },
+ [2m161[0m |   ]
+ [2m162[0m | 
+ [2m163[0m |   const fallbackRiskDistribution = [
+ [2m164[0m |     { risk: "Low", count: 89, percentage: 62.2 },
+ [2m165[0m |     { risk: "Medium", count: 34, percentage: 23.8 },
+ [2m166[0m |     { risk: "High", count: 20, percentage: 14.0 },
+ [2m167[0m |   ]
+ [2m168[0m | 
+ [2m169[0m |   // Use real data if available, otherwise fallback
+ [2m170[0m |   const displayPatientVolume = patientVolume.length > 0 ? patientVolume : fallbackPatientVolume
+ [2m171[0m |   const displayConditionDistribution = conditionDistribution.length > 0 ? conditionDistribution : fallbackConditionDistribution
+ [2m172[0m |   const displayRiskDistribution = riskDistribution.length > 0 ? riskDistribution : fallbackRiskDistribution
+ [2m173[0m | 
+ [2m174[0m |   const conditionDistribution = [
+ [2m175[0m |     { name: "Hypertension", value: 35, color: "#164e63" },
+ [2m176[0m |     { name: "Diabetes", value: 25, color: "#8b5cf6" },
+ [2m177[0m |     { name: "Cardiac", value: 20, color: "#ec4899" },
+ [2m178[0m |     { name: "Respiratory", value: 12, color: "#1f2937" },
+ [2m179[0m |     { name: "Other", value: 8, color: "#be123c" },
+ [2m180[0m |   ]
+ [2m181[0m | 
+ [2m182[0m |   const recoveryRateData = [
+ [2m183[0m |     { month: "Jan", rate: 89 },
+ [2m184[0m |     { month: "Feb", rate: 91 },
+ [2m185[0m |     { month: "Mar", rate: 88 },
+ [2m186[0m |     { month: "Apr", rate: 93 },
+ [2m187[0m |     { month: "May", rate: 94 },
+ [2m188[0m |     { month: "Jun", rate: 96 },
+ [2m189[0m |   ]
+ [2m190[0m | 
+ [2m191[0m |   const riskDistribution = [
+     : [33;1m        ^^^^^^^^|^^^^^^^[0m
+     :                 [33;1m`-- [33;1m`riskDistribution` redefined here[0m[0m
+ [2m192[0m |     { risk: "Low", count: 85, percentage: 68 },
+ [2m193[0m |     { risk: "Medium", count: 28, percentage: 22 },
+ [2m194[0m |     { risk: "High", count: 12, percentage: 10 },
+     `----
+
+Import trace for requested module:
+./components/analytics-dashboard.tsx
+./app/analytics/page.tsx
+ ✓ Compiled in 740ms (2172 modules)
+ ⨯ ./components/analytics-dashboard.tsx
+Error: 
+  [31mx[0m Expected ',', got 'className'
+     ,-[[36;1;4m/Users/sathishkesavan/Hackwell_AI/components/analytics-dashboard.tsx[0m:209:1]
+ [2m209[0m | 
+ [2m210[0m |   return (
+ [2m211[0m |       {/* Header */}
+ [2m212[0m |       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+     : [31;1m           ^^^^^^^^^[0m
+ [2m213[0m |         <div>
+ [2m214[0m |           <h1 className="text-3xl font-bold text-foreground">Analytics Dashboard</h1>
+ [2m215[0m |           <p className="text-muted-foreground mt-2">
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/analytics-dashboard.tsx
+./app/analytics/page.tsx
+ ⨯ ./components/analytics-dashboard.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sathishkesavan/Hackwell_AI/components/analytics-dashboard.tsx[0m:208:1]
+ [2m208[0m |   }
+ [2m209[0m | 
+ [2m210[0m |   return (
+ [2m211[0m |     <div className="space-y-6">
+     : [31;1m     ^^^[0m
+ [2m212[0m |       {/* Header */}
+ [2m213[0m |       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+ [2m214[0m |         <div>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/analytics-dashboard.tsx
+./app/analytics/page.tsx
+ ✓ Compiled in 636ms (2162 modules)
+ ✓ Compiled in 931ms (2162 modules)
+ ✓ Compiled in 645ms (2162 modules)
+ ✓ Compiled in 304ms (1059 modules)
+ ✓ Compiled in 450ms (1059 modules)
+ ✓ Compiled in 261ms (1059 modules)
+ ✓ Compiled in 552ms (2162 modules)
+ ⨯ ./components/settings-dashboard.tsx
+Error: 
+  [31mx[0m Unexpected token `div`. Expected jsx identifier
+     ,-[[36;1;4m/Users/sathishkesavan/Hackwell_AI/components/settings-dashboard.tsx[0m:192:1]
+ [2m192[0m |   }
+ [2m193[0m | 
+ [2m194[0m |   return (
+ [2m195[0m |     <div className="space-y-6">
+     : [31;1m     ^^^[0m
+ [2m196[0m |       {/* Header */}
+ [2m197[0m |       <div>
+ [2m198[0m |         <h1 className="text-3xl font-bold text-foreground">Settings</h1>
+     `----
+
+Caused by:
+    Syntax Error
+
+Import trace for requested module:
+./components/settings-dashboard.tsx
+./app/settings/page.tsx
+ ✓ Compiled in 460ms (2162 modules)
+ ✓ Compiled in 552ms (2162 modules)
+ ✓ Compiled in 618ms (2162 modules)
+ ✓ Compiled in 450ms (2162 modules)
+ ✓ Compiled in 404ms (2162 modules)
+ ✓ Compiled in 433ms (1059 modules)
