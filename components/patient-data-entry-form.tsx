@@ -9,22 +9,88 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { Textarea } from "@/components/ui/textarea"
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select"
-import { Checkbox } from "@/components/ui/checkbox"
 import { Slider } from "@/components/ui/slider"
-import { User, Activity, FlaskConical, Pill, Heart, Target } from "lucide-react"
+import { User, Activity, FlaskConical, Pill, Heart, Target, Dna, Baby } from "lucide-react"
 
 export function PatientDataEntryForm() {
   const [formData, setFormData] = useState({
-    // Demographics
+    // Basic Demographics
     patientId: "",
     age: "",
-    gender: "",
+    sex: "",
+
+    // Cardiac Parameters
+    cp: "",
+    trestbps: "",
+    chol: "",
+    fbs: "",
+    restecg: "",
+    thalach: "",
+    exang: "",
+    oldpeak: "",
+    slope: "",
+    ca: "",
+    thal: "",
+    condition: "",
+
+    // Lifestyle and Nutrition
+    family_history_with_overweight: "",
+    FAVC: "",
+    FCVC: [1],
+    NCP: "",
+    CAEC: "",
+    SMOKE: "",
+    CH2O: "",
+    SCC: "",
+    FAF: [0],
+    TUE: "",
+    CALC: "",
+    MTRANS: "",
+    NObeyesdad: "",
+
+    // Diabetes and Metabolic
+    Target: "",
+    geneticMarkers: "",
+    autoantibodies: "",
+    familyHistory: "",
+    environmentalFactors: "",
+    insulinLevels: "",
+    BMI: "",
+    physicalActivity: "",
+    dietaryHabits: "",
+    bloodPressure: "",
+    cholesterolLevels: "",
+    waistCircumference: "",
+    bloodGlucoseLevels: "",
+    ethnicity: "",
+    socioeconomicFactors: "",
+    smokingStatus: "",
+    alcoholConsumption: "",
+    glucoseToleranceTest: "",
+
+    // Reproductive Health
+    historyOfPCOS: "",
+    previousGestationalDiabetes: "",
+    pregnancyHistory: "",
+    weightGainDuringPregnancy: "",
+
+    // Organ Function
+    pancreaticHealth: "",
+    pulmonaryFunction: "",
+    cysticFibrosisdiagnosis: "",
+    steroidUseHistory: "",
+    geneticTesting: "",
+    neurologicalAssessments: "",
+    liverFunctionTests: "",
+    digestiveEnzymeLevels: "",
+    urineTest: "",
+    birthWeight: "",
+    earlyOnsetSymptoms: "",
+
+    // Original fields for compatibility
     height: "",
     weight: "",
     chronicConditions: [] as string[],
-    familyHistory: "",
-
-    // Vitals
     systolicBP: "",
     diastolicBP: "",
     heartRate: "",
@@ -32,8 +98,6 @@ export function PatientDataEntryForm() {
     bodyTemp: "",
     respiratoryRate: "",
     weightChange: "",
-
-    // Lab Results
     fastingGlucose: "",
     hba1c: "",
     ldlCholesterol: "",
@@ -43,21 +107,13 @@ export function PatientDataEntryForm() {
     egfr: "",
     hemoglobin: "",
     bnp: "",
-
-    // Medication
     currentMedications: "",
     missedDoses: "",
     sideEffects: "",
-
-    // Lifestyle
     dietQuality: "",
     exerciseMinutes: "",
     sleepDuration: "",
-    smokingStatus: "",
-    alcoholUsage: "",
     stressLevel: [5],
-
-    // Clinical Outcomes
     hospitalizationEvents: "",
     emergencyVisits: "",
     deteriorationEvents: "",
@@ -96,42 +152,55 @@ export function PatientDataEntryForm() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <User className="h-5 w-5 text-primary" />
-            Patient Demographics
+            Patient Demographics & Basic Info
           </CardTitle>
-          <CardDescription>Baseline patient information for ML model training</CardDescription>
+          <CardDescription>Essential patient information and identifiers</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="patientId">Patient ID (Anonymized)</Label>
+            <Label htmlFor="patientId">Patient ID (Required)</Label>
             <Input
               id="patientId"
               value={formData.patientId}
               onChange={(e) => setFormData((prev) => ({ ...prev, patientId: e.target.value }))}
               placeholder="e.g., PT-2024-001"
+              required
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="age">Age</Label>
+            <Label htmlFor="age">Age (years)</Label>
             <Input
               id="age"
               type="number"
+              min="1"
               value={formData.age}
-              onChange={(e) => setFormData((prev) => ({ ...prev, age: e.target.value }))}
-              placeholder="Years"
+              onChange={(e) => {
+                const value = e.target.value;
+                // Only update if the value is empty or a positive number
+                if (value === '' || (parseInt(value) > 0)) {
+                  setFormData((prev) => ({ ...prev, age: value }));
+                }
+              }}
+              onBlur={(e) => {
+                // If the field is not empty and the value is 0 or negative, reset it
+                if (e.target.value && parseInt(e.target.value) <= 0) {
+                  setFormData((prev) => ({ ...prev, age: '' }));
+                }
+              }}
+              placeholder="25, 45, 60"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="gender">Gender</Label>
-            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, gender: value }))}>
+            <Label htmlFor="sex">Sex</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, sex: value }))}>
               <SelectTrigger>
-                <SelectValue placeholder="Select gender" />
+                <SelectValue placeholder="Select sex" />
               </SelectTrigger>
               <SelectContent>
-                <SelectItem value="male">Male</SelectItem>
-                <SelectItem value="female">Female</SelectItem>
-                <SelectItem value="other">Other</SelectItem>
+                <SelectItem value="0">Female (0)</SelectItem>
+                <SelectItem value="1">Male (1)</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -158,193 +227,741 @@ export function PatientDataEntryForm() {
             />
           </div>
 
-          <div className="space-y-2 md:col-span-2 lg:col-span-3">
-            <Label>Chronic Conditions</Label>
-            <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
-              {chronicConditionsList.map((condition) => (
-                <div key={condition} className="flex items-center space-x-2">
-                  <Checkbox
-                    id={condition}
-                    checked={formData.chronicConditions.includes(condition)}
-                    onCheckedChange={(checked) => handleCheckboxChange(condition, checked as boolean)}
-                  />
-                  <Label htmlFor={condition} className="text-sm">
-                    {condition}
-                  </Label>
-                </div>
-              ))}
-            </div>
+          <div className="space-y-2">
+            <Label htmlFor="BMI">BMI (kg/m²)</Label>
+            <Input
+              id="BMI"
+              type="number"
+              step="0.1"
+              value={formData.BMI}
+              onChange={(e) => setFormData((prev) => ({ ...prev, BMI: e.target.value }))}
+              placeholder="18.5, 25.0, 30.0"
+            />
           </div>
 
-          <div className="space-y-2 md:col-span-2 lg:col-span-3">
-            <Label htmlFor="familyHistory">Family History (Optional)</Label>
-            <Textarea
-              id="familyHistory"
-              value={formData.familyHistory}
-              onChange={(e) => setFormData((prev) => ({ ...prev, familyHistory: e.target.value }))}
-              placeholder="Relevant family medical history..."
-              rows={3}
+          <div className="space-y-2">
+            <Label htmlFor="ethnicity">Ethnicity</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, ethnicity: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select ethnicity" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="asian">Asian</SelectItem>
+                <SelectItem value="caucasian">Caucasian</SelectItem>
+                <SelectItem value="african_american">African American</SelectItem>
+                <SelectItem value="hispanic">Hispanic</SelectItem>
+                <SelectItem value="other">Other</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="socioeconomicFactors">Socioeconomic Status</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, socioeconomicFactors: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="low">Low</SelectItem>
+                <SelectItem value="middle">Middle</SelectItem>
+                <SelectItem value="high">High</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="birthWeight">Birth Weight (grams)</Label>
+            <Input
+              id="birthWeight"
+              type="number"
+              value={formData.birthWeight}
+              onChange={(e) => setFormData((prev) => ({ ...prev, birthWeight: e.target.value }))}
+              placeholder="1500, 2500, 3500"
             />
           </div>
         </CardContent>
       </Card>
 
-      {/* Vitals */}
+      {/* Cardiac Parameters */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Heart className="h-5 w-5 text-red-500" />
+            Cardiac Parameters
+          </CardTitle>
+          <CardDescription>Heart-related measurements and conditions</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="cp">Chest Pain Type</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, cp: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">Type 0</SelectItem>
+                <SelectItem value="1">Type 1</SelectItem>
+                <SelectItem value="2">Type 2</SelectItem>
+                <SelectItem value="3">Type 3</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="trestbps">Resting Blood Pressure (mmHg)</Label>
+            <Input
+              id="trestbps"
+              type="number"
+              value={formData.trestbps}
+              onChange={(e) => setFormData((prev) => ({ ...prev, trestbps: e.target.value }))}
+              placeholder="120, 140, 160"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="chol">Serum Cholesterol (mg/dl)</Label>
+            <Input
+              id="chol"
+              type="number"
+              value={formData.chol}
+              onChange={(e) => setFormData((prev) => ({ ...prev, chol: e.target.value }))}
+              placeholder="200, 240, 300"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="fbs">Fasting Blood Sugar &gt; 120 mg/dl</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, fbs: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">False (0)</SelectItem>
+                <SelectItem value="1">True (1)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="restecg">Resting ECG Results</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, restecg: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select result" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">Normal (0)</SelectItem>
+                <SelectItem value="1">ST-T abnormality (1)</SelectItem>
+                <SelectItem value="2">LV hypertrophy (2)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="thalach">Maximum Heart Rate Achieved</Label>
+            <Input
+              id="thalach"
+              type="number"
+              value={formData.thalach}
+              onChange={(e) => setFormData((prev) => ({ ...prev, thalach: e.target.value }))}
+              placeholder="120, 150, 180"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="exang">Exercise Induced Angina</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, exang: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">No (0)</SelectItem>
+                <SelectItem value="1">Yes (1)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="oldpeak">ST Depression (Exercise vs Rest)</Label>
+            <Input
+              id="oldpeak"
+              type="number"
+              step="0.1"
+              value={formData.oldpeak}
+              onChange={(e) => setFormData((prev) => ({ ...prev, oldpeak: e.target.value }))}
+              placeholder="0.0, 1.5, 2.5"
+            />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="slope">Peak Exercise ST Segment Slope</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, slope: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select slope" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">Upsloping (0)</SelectItem>
+                <SelectItem value="1">Flat (1)</SelectItem>
+                <SelectItem value="2">Downsloping (2)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="ca">Major Vessels Colored by Fluoroscopy</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, ca: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select number" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">0</SelectItem>
+                <SelectItem value="1">1</SelectItem>
+                <SelectItem value="2">2</SelectItem>
+                <SelectItem value="3">3</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="thal">Thalassemia</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, thal: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="1">Normal (1)</SelectItem>
+                <SelectItem value="2">Fixed Defect (2)</SelectItem>
+                <SelectItem value="3">Reversible Defect (3)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="condition">Heart Disease Presence</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, condition: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="0">No (0)</SelectItem>
+                <SelectItem value="1">Yes (1)</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Lifestyle and Nutrition */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Activity className="h-5 w-5 text-emerald-500" />
-            Vital Signs
+            Lifestyle & Nutrition Factors
           </CardTitle>
-          <CardDescription>Daily/weekly vital measurements</CardDescription>
+          <CardDescription>Daily habits and nutritional patterns</CardDescription>
         </CardHeader>
-        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
-          <div className="space-y-2">
-            <Label htmlFor="systolicBP">Systolic BP (mmHg)</Label>
-            <Input
-              id="systolicBP"
-              type="number"
-              value={formData.systolicBP}
-              onChange={(e) => setFormData((prev) => ({ ...prev, systolicBP: e.target.value }))}
-              placeholder="120"
-            />
+        <CardContent className="space-y-4">
+          <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+            <div className="space-y-2">
+              <Label htmlFor="family_history_with_overweight">Family History of Overweight</Label>
+              <Select
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, family_history_with_overweight: value }))}
+              >
+                <SelectTrigger>
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="yes">Yes</SelectItem>
+                  <SelectItem value="no">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="FAVC">Frequent High-Calorie Food Consumption</Label>
+              <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, FAVC: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="yes">Yes</SelectItem>
+                  <SelectItem value="no">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="NCP">Number of Main Meals Per Day</Label>
+              <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, NCP: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select meals" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="1">1</SelectItem>
+                  <SelectItem value="2">2</SelectItem>
+                  <SelectItem value="3">3</SelectItem>
+                  <SelectItem value="4">4</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="CAEC">Food Between Meals</Label>
+              <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, CAEC: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="no">No</SelectItem>
+                  <SelectItem value="sometimes">Sometimes</SelectItem>
+                  <SelectItem value="frequently">Frequently</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="SMOKE">Smoking Status</Label>
+              <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, SMOKE: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select status" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="yes">Yes</SelectItem>
+                  <SelectItem value="no">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="CH2O">Water Consumption (Liters/Day)</Label>
+              <Input
+                id="CH2O"
+                type="number"
+                step="0.1"
+                value={formData.CH2O}
+                onChange={(e) => setFormData((prev) => ({ ...prev, CH2O: e.target.value }))}
+                placeholder="1.5, 2.0, 2.5"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="SCC">Monitor Caloric Consumption</Label>
+              <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, SCC: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="yes">Yes</SelectItem>
+                  <SelectItem value="no">No</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="TUE">Electronic Device Usage (hours/day)</Label>
+              <Input
+                id="TUE"
+                type="number"
+                step="0.1"
+                value={formData.TUE}
+                onChange={(e) => setFormData((prev) => ({ ...prev, TUE: e.target.value }))}
+                placeholder="0.5, 1.0, 1.5"
+              />
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="CALC">Alcohol Consumption</Label>
+              <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, CALC: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select frequency" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="no">No</SelectItem>
+                  <SelectItem value="sometimes">Sometimes</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
+
+            <div className="space-y-2">
+              <Label htmlFor="MTRANS">Mode of Transportation</Label>
+              <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, MTRANS: value }))}>
+                <SelectTrigger>
+                  <SelectValue placeholder="Select mode" />
+                </SelectTrigger>
+                <SelectContent>
+                  <SelectItem value="public_transportation">Public Transportation</SelectItem>
+                  <SelectItem value="automobile">Automobile</SelectItem>
+                  <SelectItem value="walking">Walking</SelectItem>
+                  <SelectItem value="bike">Bike</SelectItem>
+                </SelectContent>
+              </Select>
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="diastolicBP">Diastolic BP (mmHg)</Label>
-            <Input
-              id="diastolicBP"
-              type="number"
-              value={formData.diastolicBP}
-              onChange={(e) => setFormData((prev) => ({ ...prev, diastolicBP: e.target.value }))}
-              placeholder="80"
-            />
+            <Label>Vegetable Consumption Frequency (1-3 scale)</Label>
+            <div className="px-3">
+              <Slider
+                value={formData.FCVC}
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, FCVC: value }))}
+                max={3}
+                min={1}
+                step={1}
+                className="w-full"
+              />
+              <div className="flex justify-between text-sm text-muted-foreground mt-1">
+                <span>Low (1)</span>
+                <span>Current: {formData.FCVC[0]}</span>
+                <span>High (3)</span>
+              </div>
+            </div>
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="heartRate">Heart Rate (bpm)</Label>
-            <Input
-              id="heartRate"
-              type="number"
-              value={formData.heartRate}
-              onChange={(e) => setFormData((prev) => ({ ...prev, heartRate: e.target.value }))}
-              placeholder="72"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="bloodOxygen">Blood Oxygen (SpO₂%)</Label>
-            <Input
-              id="bloodOxygen"
-              type="number"
-              value={formData.bloodOxygen}
-              onChange={(e) => setFormData((prev) => ({ ...prev, bloodOxygen: e.target.value }))}
-              placeholder="98"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="bodyTemp">Body Temperature (°C)</Label>
-            <Input
-              id="bodyTemp"
-              type="number"
-              step="0.1"
-              value={formData.bodyTemp}
-              onChange={(e) => setFormData((prev) => ({ ...prev, bodyTemp: e.target.value }))}
-              placeholder="36.5"
-            />
-          </div>
-
-          <div className="space-y-2">
-            <Label htmlFor="respiratoryRate">Respiratory Rate (breaths/min)</Label>
-            <Input
-              id="respiratoryRate"
-              type="number"
-              value={formData.respiratoryRate}
-              onChange={(e) => setFormData((prev) => ({ ...prev, respiratoryRate: e.target.value }))}
-              placeholder="16"
-            />
+            <Label>Physical Activity Frequency (0-3 scale)</Label>
+            <div className="px-3">
+              <Slider
+                value={formData.FAF}
+                onValueChange={(value) => setFormData((prev) => ({ ...prev, FAF: value }))}
+                max={3}
+                min={0}
+                step={1}
+                className="w-full"
+              />
+              <div className="flex justify-between text-sm text-muted-foreground mt-1">
+                <span>None (0)</span>
+                <span>Current: {formData.FAF[0]}</span>
+                <span>High (3)</span>
+              </div>
+            </div>
           </div>
         </CardContent>
       </Card>
 
-      {/* Lab Results */}
+      {/* Diabetes and Metabolic Factors */}
       <Card>
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <FlaskConical className="h-5 w-5 text-amber-500" />
-            Laboratory Results
+            Diabetes & Metabolic Factors
           </CardTitle>
-          <CardDescription>Periodic lab test results and biomarkers</CardDescription>
+          <CardDescription>Diabetes-related parameters and metabolic health indicators</CardDescription>
         </CardHeader>
         <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
           <div className="space-y-2">
-            <Label htmlFor="fastingGlucose">Fasting Glucose (mg/dL)</Label>
+            <Label htmlFor="Target">Diabetes Type</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, Target: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select type" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="steroid_induced">Steroid-Induced Diabetes</SelectItem>
+                <SelectItem value="type_1">Type 1 Diabetes</SelectItem>
+                <SelectItem value="type_2">Type 2 Diabetes</SelectItem>
+                <SelectItem value="gestational">Gestational Diabetes</SelectItem>
+                <SelectItem value="none">No Diabetes</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="geneticMarkers">Genetic Markers</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, geneticMarkers: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select result" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="positive">Positive</SelectItem>
+                <SelectItem value="negative">Negative</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="autoantibodies">Autoantibodies</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, autoantibodies: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select result" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="positive">Positive</SelectItem>
+                <SelectItem value="negative">Negative</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="familyHistory">Family History of Diabetes</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, familyHistory: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="environmentalFactors">Environmental Risk Factors</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, environmentalFactors: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="present">Present</SelectItem>
+                <SelectItem value="absent">Absent</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="insulinLevels">Insulin Level (μU/mL)</Label>
             <Input
-              id="fastingGlucose"
+              id="insulinLevels"
               type="number"
-              value={formData.fastingGlucose}
-              onChange={(e) => setFormData((prev) => ({ ...prev, fastingGlucose: e.target.value }))}
-              placeholder="90"
+              value={formData.insulinLevels}
+              onChange={(e) => setFormData((prev) => ({ ...prev, insulinLevels: e.target.value }))}
+              placeholder="10, 50, 100"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hba1c">HbA1c (%)</Label>
+            <Label htmlFor="bloodGlucoseLevels">Blood Glucose Level (mg/dL)</Label>
             <Input
-              id="hba1c"
+              id="bloodGlucoseLevels"
               type="number"
-              step="0.1"
-              value={formData.hba1c}
-              onChange={(e) => setFormData((prev) => ({ ...prev, hba1c: e.target.value }))}
-              placeholder="5.7"
+              value={formData.bloodGlucoseLevels}
+              onChange={(e) => setFormData((prev) => ({ ...prev, bloodGlucoseLevels: e.target.value }))}
+              placeholder="80, 120, 200"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="ldlCholesterol">LDL Cholesterol (mg/dL)</Label>
+            <Label htmlFor="waistCircumference">Waist Circumference (cm)</Label>
             <Input
-              id="ldlCholesterol"
+              id="waistCircumference"
               type="number"
-              value={formData.ldlCholesterol}
-              onChange={(e) => setFormData((prev) => ({ ...prev, ldlCholesterol: e.target.value }))}
-              placeholder="100"
+              value={formData.waistCircumference}
+              onChange={(e) => setFormData((prev) => ({ ...prev, waistCircumference: e.target.value }))}
+              placeholder="80, 90, 100"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hdlCholesterol">HDL Cholesterol (mg/dL)</Label>
+            <Label htmlFor="glucoseToleranceTest">Glucose Tolerance Test</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, glucoseToleranceTest: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select result" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="impaired">Impaired</SelectItem>
+                <SelectItem value="diabetic">Diabetic</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Reproductive Health */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Baby className="h-5 w-5 text-pink-500" />
+            Reproductive Health
+          </CardTitle>
+          <CardDescription>Pregnancy and reproductive health factors</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="historyOfPCOS">History of PCOS</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, historyOfPCOS: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="previousGestationalDiabetes">Previous Gestational Diabetes</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, previousGestationalDiabetes: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="pregnancyHistory">Pregnancy History</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, pregnancyHistory: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="weightGainDuringPregnancy">Excess Weight Gain During Pregnancy</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, weightGainDuringPregnancy: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Organ Function Tests */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Dna className="h-5 w-5 text-purple-500" />
+            Organ Function & Specialized Tests
+          </CardTitle>
+          <CardDescription>Organ function assessments and specialized medical tests</CardDescription>
+        </CardHeader>
+        <CardContent className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4">
+          <div className="space-y-2">
+            <Label htmlFor="pancreaticHealth">Pancreatic Health Status</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, pancreaticHealth: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select status" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="abnormal">Abnormal</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="pulmonaryFunction">Pulmonary Function Test</Label>
             <Input
-              id="hdlCholesterol"
+              id="pulmonaryFunction"
               type="number"
-              value={formData.hdlCholesterol}
-              onChange={(e) => setFormData((prev) => ({ ...prev, hdlCholesterol: e.target.value }))}
-              placeholder="50"
+              value={formData.pulmonaryFunction}
+              onChange={(e) => setFormData((prev) => ({ ...prev, pulmonaryFunction: e.target.value }))}
+              placeholder="Numerical value (e.g., 76)"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="creatinine">Creatinine (mg/dL)</Label>
+            <Label htmlFor="cysticFibrosisdiagnosis">Cystic Fibrosis Diagnosis</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, cysticFibrosisdiagnosis: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="steroidUseHistory">History of Steroid Use</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, steroidUseHistory: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="geneticTesting">Genetic Testing Result</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, geneticTesting: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select result" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="positive">Positive</SelectItem>
+                <SelectItem value="negative">Negative</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="neurologicalAssessments">Neurological Assessment Score</Label>
             <Input
-              id="creatinine"
+              id="neurologicalAssessments"
               type="number"
-              step="0.1"
-              value={formData.creatinine}
-              onChange={(e) => setFormData((prev) => ({ ...prev, creatinine: e.target.value }))}
-              placeholder="1.0"
+              value={formData.neurologicalAssessments}
+              onChange={(e) => setFormData((prev) => ({ ...prev, neurologicalAssessments: e.target.value }))}
+              placeholder="Score (e.g., 1, 2, 3)"
             />
           </div>
 
           <div className="space-y-2">
-            <Label htmlFor="hemoglobin">Hemoglobin (g/dL)</Label>
+            <Label htmlFor="liverFunctionTests">Liver Function Tests</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, liverFunctionTests: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select result" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="normal">Normal</SelectItem>
+                <SelectItem value="abnormal">Abnormal</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="digestiveEnzymeLevels">Digestive Enzyme Levels</Label>
             <Input
-              id="hemoglobin"
+              id="digestiveEnzymeLevels"
               type="number"
-              step="0.1"
-              value={formData.hemoglobin}
-              onChange={(e) => setFormData((prev) => ({ ...prev, hemoglobin: e.target.value }))}
-              placeholder="14.0"
+              value={formData.digestiveEnzymeLevels}
+              onChange={(e) => setFormData((prev) => ({ ...prev, digestiveEnzymeLevels: e.target.value }))}
+              placeholder="Numerical value (e.g., 56)"
             />
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="urineTest">Urine Test Results</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, urineTest: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select result" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="ketones_present">Ketones Present</SelectItem>
+                <SelectItem value="glucose_present">Glucose Present</SelectItem>
+                <SelectItem value="protein_present">Protein Present</SelectItem>
+                <SelectItem value="normal">Normal</SelectItem>
+              </SelectContent>
+            </Select>
+          </div>
+
+          <div className="space-y-2">
+            <Label htmlFor="earlyOnsetSymptoms">Early Onset Symptoms</Label>
+            <Select onValueChange={(value) => setFormData((prev) => ({ ...prev, earlyOnsetSymptoms: value }))}>
+              <SelectTrigger>
+                <SelectValue placeholder="Select" />
+              </SelectTrigger>
+              <SelectContent>
+                <SelectItem value="yes">Yes</SelectItem>
+                <SelectItem value="no">No</SelectItem>
+              </SelectContent>
+            </Select>
           </div>
         </CardContent>
       </Card>
