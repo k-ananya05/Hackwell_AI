@@ -2,11 +2,11 @@
 
 import type React from "react"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import Link from "next/link"
 import { useRouter, usePathname } from "next/navigation"
 import { Button } from "@/components/ui/button"
-import { Users, BarChart3, Settings, LogOut, Menu, X, Activity, Brain } from "lucide-react"
+import { Users, BarChart3, Settings, LogOut, Menu, X, Activity, Brain, FileText } from "lucide-react"
 
 interface DashboardLayoutProps {
   children: React.ReactNode
@@ -27,15 +27,21 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
   const navigation = [
     { name: "Dashboard", href: "/dashboard", icon: Activity },
     { name: "Patients", href: "/patients", icon: Users },
+    { name: "Data Entry", href: "/data-entry", icon: FileText },
     { name: "Analytics", href: "/analytics", icon: BarChart3 },
     { name: "AI Insights", href: "/explainability", icon: Brain },
     { name: "Settings", href: "/settings", icon: Settings },
   ]
 
-  const userName = typeof window !== "undefined" ? localStorage.getItem("userName") || "Doctor" : "Doctor"
+  const [userName, setUserName] = useState("Doctor")
+  
+  useEffect(() => {
+    // This code will only run on the client side
+    setUserName(localStorage.getItem("userName") || "Doctor")
+  }, [])
 
   return (
-    <div className="min-h-screen bg-background flex">
+    <div className="min-h-screen bg-background flex overflow-hidden">
       {/* Mobile sidebar overlay */}
       {sidebarOpen && (
         <div className="fixed inset-0 z-40 bg-black bg-opacity-50 lg:hidden" onClick={() => setSidebarOpen(false)} />
@@ -44,7 +50,7 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       {/* Sidebar */}
       <div
         className={`
-        fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0 h-screen overflow-y-auto
+        fixed inset-y-0 left-0 z-50 w-64 bg-sidebar border-r border-sidebar-border transform transition-transform duration-300 ease-in-out lg:translate-x-0 lg:static lg:inset-0 lg:flex-shrink-0 h-screen overflow-y-auto sticky top-0
         ${sidebarOpen ? "translate-x-0" : "-translate-x-full"}
       `}
       >
@@ -104,9 +110,9 @@ export function DashboardLayout({ children }: DashboardLayoutProps) {
       </div>
 
       {/* Main content */}
-      <div className="flex-1 flex flex-col overflow-hidden">
+      <div className="flex-1 flex flex-col overflow-auto h-screen">
         {/* Top bar */}
-        <header className="bg-card border-b border-border sticky top-0 z-10">
+        <header className="bg-background border-b border-border sticky top-0 z-40">
           <div className="flex items-center justify-between h-16 px-6">
             <Button variant="ghost" size="sm" className="lg:hidden" onClick={() => setSidebarOpen(true)}>
               <Menu className="h-4 w-4" />
